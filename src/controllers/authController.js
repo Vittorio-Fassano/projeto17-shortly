@@ -16,30 +16,31 @@ export async function signUp(req, res) {
 
     res.sendStatus(201);
   } catch (err) {
-    return res.status(422).send(err);
+    return res.sendStatus(422);
   }
 }
 
 export async function signIn(req, res) {
+  const { email } = req.body;
+
   try {
-    const { user } = res.locals;
     const token = uuidv4();
+
+    const user = await connectionDB.query(
+      `SELECT * 
+      FROM users 
+      WHERE email = $1;`,
+      [email]
+    );
 
     await connectionDB.query(
       `INSERT INTO sessions (token, "userId") 
       VALUES ($1, $2);`,
-      [token, user.id]
+      [token, user.rows[0].id]
     );
 
-    const session = await connectionDB.query(
-      `SELECT * 
-      FROM sessions 
-      WHERE "userId" = $1;`,
-      [user.id]
-    );
-
-    res.send(session.rows[0].token).status(200);
+    res.sendStatus(200);
   } catch (err) {
-    return res.status(422).send(err);
+    return res.sendStatus(422);
   }
 }

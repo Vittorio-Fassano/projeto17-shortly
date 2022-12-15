@@ -58,7 +58,6 @@ export async function validatingSignIn(req, res, next) {
       return res.sendStatus(401);
     }
 
-    res.locals.user = user;
     next();
   } catch (err) {
     return res.sendStatus(500);
