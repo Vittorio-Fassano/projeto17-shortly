@@ -1,15 +1,18 @@
 import bcrypt from "bcrypt";
-import { connectionDB } from "../database/db.js";
+import connectionDB from "../database/db.js";
 
 import { signUpSchema } from "../models/authSchema.js";
 import { signInSchema } from "../models/authSchema.js";
 
 export async function validatingSignUp(req, res, next) {
-  const { email } = req.body;
+  const { email, password, confirmPassword } = req.body;
   const { error } = signUpSchema.validate(req.body, { abortEarly: false });
 
   if (error) {
     return res.status(400).send(error.details.map((detail) => detail.message));
+  }
+  if (password != confirmPassword) {
+    return res.sendStatus(422);
   }
 
   try {

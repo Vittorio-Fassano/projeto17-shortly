@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 
-import { connectionDB } from "../database/db.js";
+import connectionDB from "../database/db.js";
 
 export async function signUp(req, res) {
   const { name, email, password } = req.body;
@@ -9,9 +9,9 @@ export async function signUp(req, res) {
 
   try {
     await connectionDB.query(
-      `INSERT INTO users (name, email, password) 
-      VALUES ($1, $2, $3);`,
-      [name, email, passwordHash]
+      `INSERT INTO users (name, email, password, "confirmPassword") 
+      VALUES ($1, $2, $3, $4);`,
+      [name, email, passwordHash, passwordHash]
     );
 
     res.sendStatus(201);
