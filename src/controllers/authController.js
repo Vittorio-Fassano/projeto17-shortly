@@ -20,4 +20,26 @@ export async function signUp(req, res) {
   }
 }
 
-export async function signIn(req, res) {}
+export async function signIn(req, res) {
+  try {
+    const { user } = res.locals;
+    const token = uuidv4();
+
+    await connectionDB.query(
+      `INSERT INTO sessions (token, "userId") 
+      VALUES ($1, $2);`,
+      [token, user.id]
+    );
+
+    const session = await connectionDB.query(
+      `SELECT * 
+      FROM sessions 
+      WHERE "userId" = $1;`,
+      [user.id]
+    );
+
+    res.send(session.rows[0].token).status(200);
+  } catch (err) {
+    return res.status(422).send(err);
+  }
+}
