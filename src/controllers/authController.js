@@ -39,7 +39,14 @@ export async function signIn(req, res) {
       [token, user.rows[0].id]
     );
 
-    res.sendStatus(200);
+    const session = await connectionDB.query(
+      `SELECT * 
+      FROM sessions 
+      WHERE "userId" = $1;`,
+      [user.rows[0].id]
+    );
+
+    res.status(200).send(session.rows[0].token);
   } catch (err) {
     return res.sendStatus(422);
   }
