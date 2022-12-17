@@ -40,3 +40,27 @@ export async function getUrl(req, res) {
     return res.sendStatus(422);
   }
 }
+
+export async function getUrlShort(req, res) {
+  const { shortUrl } = req.params;
+  try {
+    const url = await connectionDB.query(
+      `SELECT * 
+      FROM urls 
+      WHERE "shortUrl" = $1;`,
+      [shortUrl]
+    );
+
+    let totalViews = url.rows[0].views + 1;
+    await connectionDB.query(
+      `UPDATE urls
+      SET views = $1 
+      WHERE "shortUrl" = $2;`,
+      [totalViews, shortUrl]
+    );
+
+    return res.redirect(url.rows[0].url);
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+}

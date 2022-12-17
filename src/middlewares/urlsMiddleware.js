@@ -29,3 +29,23 @@ export async function validatingUrlGet(req, res, next) {
     return res.sendStatus(500);
   }
 }
+
+export async function validatingUrlShort(req, res, next) {
+  const { shortUrl } = req.params;
+  try {
+    const urlAlreadyExist = await connectionDB.query(
+      `SELECT * 
+      FROM urls 
+      WHERE "shortUrl" = $1;`,
+      [shortUrl]
+    );
+
+    if (urlAlreadyExist.rowCount === 0) {
+      return res.sendStatus(404);
+    }
+
+    next();
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+}
