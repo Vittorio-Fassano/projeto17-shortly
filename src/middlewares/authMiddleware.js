@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import connectionDB from "../database/db.js";
-
 import { signUpSchema } from "../models/authSchema.js";
 import { signInSchema } from "../models/authSchema.js";
 

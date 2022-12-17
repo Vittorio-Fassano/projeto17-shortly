@@ -1,6 +1,6 @@
 import connectionDB from "../database/db.js";
 
-export async function validatingToken(req, res, next) {
+export async function validatingSession(req, res, next) {
   const { authorization } = req.headers;
   const token = authorization?.replace("Bearer ", "");
 
@@ -9,18 +9,18 @@ export async function validatingToken(req, res, next) {
   }
   
   try {
-    const sessionAlreadyExist = await connectionDB.query(
+    const sessionExist = await connectionDB.query(
       `SELECT * 
       FROM sessions 
       WHERE token = $1;`,
       [token]
     );
 
-    if (!sessionAlreadyExist.rows[0]) {
-      return res.sendStatus(409);
+    if (!sessionExist.rows[0]) {
+      return res.sendStatus(401);
     }
 
-    res.locals.session = session;
+    res.locals.session = sessionExist;
     next();
   } catch (err) {
     return res.sendStatus(500);
