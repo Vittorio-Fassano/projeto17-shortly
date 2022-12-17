@@ -6,7 +6,6 @@ import { signInSchema } from "../models/authSchema.js";
 export async function validatingSignUp(req, res, next) {
   const { email, password, confirmPassword } = req.body;
   const { error } = signUpSchema.validate(req.body, { abortEarly: false });
-
   if (error) {
     return res.status(400).send(error.details.map((detail) => detail.message));
   }
@@ -35,7 +34,6 @@ export async function validatingSignUp(req, res, next) {
 export async function validatingSignIn(req, res, next) {
   const { email, password } = req.body;
   const { error } = signInSchema.validate(req.body, { abortEarly: false });
-
   if (error) {
     return res.status(400).send(error.details.map((detail) => detail.message));
   }

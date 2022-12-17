@@ -1,11 +1,31 @@
 import { urlsSchema } from "../models/urlsSchema.js";
+import connectionDB from "../database/db.js";
 
 export async function validatingUrlPost(req, res, next) {
   const { error } = urlsSchema.validate(req.body, { abortEarly: false });
-
   if (error) {
     return res.status(400).send(error.details.map((detail) => detail.message));
   }
-  
+
   next();
+}
+
+export async function validatingUrlGet(req, res, next) {
+  const { id } = req.params;
+  try {
+    const urlAlreadyExist = await connectionDB.query(
+      `SELECT * 
+      FROM urls 
+      WHERE id = $1;`,
+      [id]
+    );
+
+    if (urlAlreadyExist.rowCount === 0) {
+      return res.sendStatus(409);
+    }
+
+    next();
+  } catch (err) {
+    return res.sendStatus(500);
+  }
 }

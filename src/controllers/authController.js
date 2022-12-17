@@ -5,7 +5,6 @@ import connectionDB from "../database/db.js";
 export async function signUp(req, res) {
   const { name, email, password } = req.body;
   const passwordHash = bcrypt.hashSync(password, 10);
-
   try {
     await connectionDB.query(
       `INSERT INTO users (name, email, password, "confirmPassword") 
@@ -21,7 +20,6 @@ export async function signUp(req, res) {
 
 export async function signIn(req, res) {
   const { email } = req.body;
-
   try {
     const token = uuidv4();
 

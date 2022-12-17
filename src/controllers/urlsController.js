@@ -5,7 +5,6 @@ export async function shortUrl(req, res) {
   const { url } = req.body;
   const shortUrl = nanoid();
   const { session } = res.locals;
-
   try {
     const sessionId = await connectionDB.query(
       `SELECT * 
@@ -21,6 +20,22 @@ export async function shortUrl(req, res) {
     );
 
     res.status(201).send(shortUrl);
+  } catch (e) {
+    return res.sendStatus(422);
+  }
+}
+
+export async function getUrl(req, res) {
+  const { id } = req.params;
+  try {
+    const url = await connectionDB.query(
+      `SELECT urls.id, urls."shortUrl", urls.url 
+      FROM urls
+      WHERE id = $1;`,
+      [id]
+    );
+
+    res.status(200).send(url.rows[0]);
   } catch (e) {
     return res.sendStatus(422);
   }
