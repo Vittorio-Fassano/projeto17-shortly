@@ -13,3 +13,12 @@ CREATE TABLE "sessions" (
     "userId" INTEGER NOT NULL REFERENCES "users"("id"),
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE "urls" (
+    "id" SERIAL PRIMARY KEY,
+    "url" TEXT NOT NULL,
+    "shortUrl" TEXT NOT NULL UNIQUE,
+    "views" INTEGER DEFAULT 0,
+    "userId" INTEGER NOT NULL REFERENCES "users"("id"),
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
