@@ -9,9 +9,11 @@ app.use(express.json());
 
 import authRouter from "./routes/authRouter.js";
 import urlsRouter from "./routes/urlsRouter.js";
+import userRouter from "./routes/userRouter.js";
 
 app.use(authRouter);
 app.use(urlsRouter);
+app.use(userRouter);
 
 const port = process.env.PORT;
 app.listen(port, () => console.log(`Server running in port ${port}`));
