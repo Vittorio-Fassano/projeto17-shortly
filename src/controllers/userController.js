@@ -33,12 +33,13 @@ export async function user(req, res) {
 export async function ranking(req, res) {
   try {
     const ranking = await connectionDB.query(
-      `SELECT users.id, users.name, COUNT (urls.url) AS "linksCount" 
+      `SELECT users.id, users.name, COUNT (urls.url) AS "linksCount", 
+      COALESCE(SUM(urls.views), 0) AS "visitCount" 
       FROM users 
       JOIN urls 
       ON users.id = urls."userId" 
       GROUP BY users.id 
-      ORDER BY "linksCount" DESC 
+      ORDER BY "visitCount" DESC
       LIMIT 10;`
     );
 
