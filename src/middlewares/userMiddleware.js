@@ -12,11 +12,10 @@ export async function validatingUser(req, res, next) {
     );
     console.log(userAlreadyExist.rows.id);
 
-    //it is not identifying the user through the id by the params
     if (!userAlreadyExist.rows[0]) {
       return res.sendStatus(404);
     }
-    if (id !== session.rows[0].userId) {
+    if (id != session.rows[0].userId) {
       return res.sendStatus(401);
     }
 
