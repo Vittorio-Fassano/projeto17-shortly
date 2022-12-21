@@ -10,7 +10,6 @@ export async function validatingUser(req, res, next) {
       WHERE id = $1;`,
       [id]
     );
-    console.log(userAlreadyExist.rows.id);
 
     if (!userAlreadyExist.rows[0]) {
       return res.sendStatus(404);
